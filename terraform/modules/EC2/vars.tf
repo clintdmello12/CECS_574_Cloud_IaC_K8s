@@ -1,0 +1,13 @@
+############### EC2 ##########################################
+variable "ami_id" {}
+variable "file_name" {}
+variable "ec2_user" {}
+variable "key_pair_name" {}
+variable "public_sg_module" {}
+variable "private_sg_module" {}
+variable "public_subnet_id" {}
+variable "private_subnet_id" {}
+variable "ec2_instance_type" {}
+variable "domain_zone_id" {}
+variable "domain" {}
+variable "vpc_name" {}

@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.csgeeks.ecommerce.SurveyBackendApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 14.129 s - in com.csgeeks.ecommerce.SurveyBackendApplicationTests

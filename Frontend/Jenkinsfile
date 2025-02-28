@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+    stages {
+        stage('ECR Login') {
+            steps {              
+                    sh '''
+                    aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${aws_acc_id}.dkr.ecr.us-east-1.amazonaws.com
+                    '''
+                }
+            } 
+        stage('Build & Push') {
+            steps {
+                    sh '''
+                    cd Frontend/
+                    docker build -t ${repo} .
+		            docker tag ${repo}:latest ${aws_acc_id}.dkr.ecr.us-east-1.amazonaws.com/${repo}:v-0.0.${BUILD_NUMBER}
+                    docker push ${aws_acc_id}.dkr.ecr.us-east-1.amazonaws.com/${repo}:v-0.0.${BUILD_NUMBER}
+                    '''
+                }
+            }
+
+	    stage('Deploy-To-EKS') {
+            steps {
+                sh '''
+                cd Frontend/
+		        sed -i "s/v-0.0.1/v-0.0.${BUILD_NUMBER}/g" values.yaml
+                chmod +x -R values.yaml
+                helm upgrade ${cluster-name} -n ${namespace_name} .
+                '''
+                }
+            }
+
+        stage('Delete Local Image') {
+            steps {
+                sh '''
+                docker image prune -a
+                '''
+            }
+        }
+    }
+    post {
+      always {
+        deleteDir() // clean up our workspace
+      }
+    }
+}
+
